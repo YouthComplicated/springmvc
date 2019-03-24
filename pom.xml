@@ -15,23 +15,79 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <maven.compiler.source>1.7</maven.compiler.source>
-    <maven.compiler.target>1.7</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.11</version>
-      <scope>test</scope>
-    </dependency>
-
     <!-- https://mvnrepository.com/artifact/org.springframework/spring-webmvc -->
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-webmvc</artifactId>
       <version>5.1.5.RELEASE</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>5.1.5.RELEASE</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+      <version>5.1.5.RELEASE</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-config -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-config</artifactId>
+      <version>5.1.4.RELEASE</version>
+    </dependency>
+
+
+      <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-web -->
+      <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-web</artifactId>
+          <version>5.1.4.RELEASE</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/org.springframework.security/spring-security-core -->
+      <dependency>
+          <groupId>org.springframework.security</groupId>
+          <artifactId>spring-security-core</artifactId>
+          <version>5.1.4.RELEASE</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/commons-dbcp/commons-dbcp -->
+      <dependency>
+          <groupId>commons-dbcp</groupId>
+          <artifactId>commons-dbcp</artifactId>
+          <version>1.4</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/com.mchange/c3p0 -->
+    <dependency>
+      <groupId>com.mchange</groupId>
+      <artifactId>c3p0</artifactId>
+      <version>0.9.5.3</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.15</version>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/javax.inject/javax.inject -->
+    <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+      <version>1</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/javax.servlet/javax.servlet-api -->
@@ -40,6 +96,39 @@
       <artifactId>javax.servlet-api</artifactId>
       <version>4.0.1</version>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.28</version>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
+      <scope>compile</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/jstl/jstl -->
+    <dependency>
+      <groupId>jstl</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+
+    <!-- https://mvnrepository.com/artifact/org.apache.tiles/tiles-servlet -->
+    <dependency>
+      <groupId>org.apache.tiles</groupId>
+      <artifactId>tiles-servlet</artifactId>
+      <version>3.0.8</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tiles</groupId>
+      <artifactId>tiles-extras</artifactId>
+      <version>3.0.4</version>
     </dependency>
 
   </dependencies>

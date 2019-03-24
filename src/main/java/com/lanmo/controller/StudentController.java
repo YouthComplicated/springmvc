@@ -26,4 +26,12 @@ public class StudentController {
         return "thello";
     }
 
+
+    //WEB-INF/views/thello.jsp
+    @RequestMapping("/index")
+    public String Hello11(){
+//        System.out.println(studentService.saySomething());
+        return "index";
+    }
+
 }
