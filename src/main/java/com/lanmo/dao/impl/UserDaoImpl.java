@@ -21,15 +21,15 @@ import java.util.List;
 @Repository
 public class UserDaoImpl implements UserDao {
 
-    private static String SELECT_USER_BY_ID = "select * from sys_user";
+    private static String SELECT_USER_BY_ID = "select * from sys_user where id = ?";
 
-    @Autowired(required = true)
+//    @Autowired(required = true)
     private JdbcOperations jdbcOperations;
 
-//    @Inject
-//    public UserDaoImpl(JdbcOperations jdbcOperations) {
-//        this.jdbcOperations = jdbcOperations;
-//    }
+    @Inject
+    public UserDaoImpl(JdbcOperations jdbcOperations) {
+        this.jdbcOperations = jdbcOperations;
+    }
 
     public List<User> findUserByUserName(String userName){
         return new ArrayList<>();
@@ -45,7 +45,7 @@ public class UserDaoImpl implements UserDao {
 
     public User findOne1(long id){
         return jdbcOperations.queryForObject(SELECT_USER_BY_ID, (rs, rowNum) -> {
-            return new User(rs.getString("username"),rs.getString("password"));
+            return   new User(rs.getString("username"),rs.getString("password"));
         }, id);
     }
 
