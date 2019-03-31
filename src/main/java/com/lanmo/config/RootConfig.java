@@ -2,16 +2,30 @@ package com.lanmo.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.LocalEntityManagerFactoryBean;
+import org.springframework.orm.jpa.support.PersistenceAnnotationBeanPostProcessor;
+import org.springframework.orm.jpa.vendor.Database;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.beans.PropertyVetoException;
+import java.util.Properties;
 
 
 /**
@@ -22,6 +36,7 @@ import java.beans.PropertyVetoException;
 @ComponentScan(value = "com.lanmo" , excludeFilters = {
     @ComponentScan.Filter(type = FilterType.ANNOTATION, classes = {Controller.class})
 })
+@EnableTransactionManagement //开启注解
 public class RootConfig {
 
     /**
@@ -87,5 +102,100 @@ public class RootConfig {
     public NamedParameterJdbcTemplate nameJdbcTemplate(){
         return new NamedParameterJdbcTemplate(dataBasicSource());
     }
+
+
+    /**
+     * 声明hibernate的session工厂
+     * @return
+     */
+//    @Bean
+    public LocalSessionFactoryBean sessionFactoryBean(){
+        LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
+        localSessionFactoryBean.setDataSource(dataBasicSource());
+        localSessionFactoryBean.setPackagesToScan("com.lanmo.entity");
+//        localSessionFactoryBean.setAnnotatedClasses(User.class);
+        Properties props = new Properties();
+        props.setProperty("dialect", "org.hibernate.dialect.MySQLDialect");
+        localSessionFactoryBean.setHibernateProperties(props);
+        return localSessionFactoryBean;
+    }
+
+    /**
+     * 当使用Hibernate上下文的Session时，抛出的就不是Spring的异常，
+     * 而是HibernateException，如果我们还想看到Spring的异常体系
+     *
+     * 在DAO实现类上加@Respository注解，并且注册一个PersistenceExceptionTranslationPostProcessor实例即可。
+     * @return
+     */
+    @Bean
+    public BeanPostProcessor persistenceTranslation(){
+        return new PersistenceExceptionTranslationPostProcessor();
+    }
+
+    /**
+     * spring 接管的事务
+     * @return
+     * @throws PropertyVetoException
+     */
+    @Bean
+    public PlatformTransactionManager transactionManager() throws PropertyVetoException {
+        return new DataSourceTransactionManager(dataBasicSource());
+    }
+
+    /**
+     *  容器管理类型jpa
+     *  not success :No persistence units parsed from {classpath*:META-INF/persistence.xml}
+     * @return
+     */
+    /**
+     * spring 提供多个JPA厂商适配器
+     * @param jpaVendorAdapter
+     * @return
+     */
+    @Bean(name = "entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(JpaVendorAdapter jpaVendorAdapter) {
+        LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
+        entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
+        entityManagerFactoryBean.setDataSource(dataBasicSource());
+        entityManagerFactoryBean.setPackagesToScan("com.lanmo.entity");
+        return entityManagerFactoryBean;
+    }
+
+    @Bean
+    public JpaVendorAdapter jpaVendorAdapter(){
+        HibernateJpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+        adapter.setDatabase(Database.MYSQL);
+        adapter.setShowSql(true);
+        adapter.setGenerateDdl(false);
+        adapter.setDatabasePlatform("org.hibernate.dialect.MySQLDialect");
+        return adapter;
+    }
+
+    @Bean
+    public PersistenceAnnotationBeanPostProcessor persistenceAnnotationBeanPostProcessor(){
+        return new PersistenceAnnotationBeanPostProcessor();
+    }
+
+//    @Bean
+//    public JpaTransactionManager jpaTransactionManager(){
+//        JpaTransactionManager transactionManager
+//                = new JpaTransactionManager();
+//        transactionManager.setEntityManagerFactory(
+//                entityManagerFactory().getObject() );
+//        return transactionManager;
+//    }
+
+    /**
+     * 应用程序管理类型JPA 不采取这种方式
+     * 参考:spring in action page 319
+     * @return
+     */
+//    @Bean
+    public LocalEntityManagerFactoryBean entityManagerFactoryBean(){
+        LocalEntityManagerFactoryBean localEntityManagerFactoryBean = new LocalEntityManagerFactoryBean();
+        localEntityManagerFactoryBean.setPersistenceUnitName("user");
+        return localEntityManagerFactoryBean;
+    }
+
 
 }

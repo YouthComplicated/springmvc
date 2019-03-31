@@ -3,12 +3,15 @@ package com.lanmo.entity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.List;
 
 /**
  * 实现UserDetails
  */
+@Entity
+@Table(name = "sys_user")
 public class User implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -40,11 +43,19 @@ public class User implements UserDetails {
         return false;
     }
 
+    @Id
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private Integer id;
+
     private String userName;
 
     private String password;
 
+    @Transient
     private List<GrantedAuthority> authorities;
+
+    public User() {
+    }
 
     public User(String username) {
     }
@@ -60,6 +71,12 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
+    public User(Integer id, String userName, String password) {
+        this.id = id;
+        this.userName = userName;
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -68,6 +85,7 @@ public class User implements UserDetails {
                 '}';
     }
 
+    @Column(name="username")
     public String getUserName() {
         return userName;
     }
@@ -76,6 +94,7 @@ public class User implements UserDetails {
         this.userName = userName;
     }
 
+    @Column(name="password")
     public String getPassword() {
         return password;
     }

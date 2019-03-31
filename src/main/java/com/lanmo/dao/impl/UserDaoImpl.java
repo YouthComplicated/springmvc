@@ -13,17 +13,13 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 关系型数据库
- * 文档数据库
- * 图数据库
- */
+
 @Repository
 public class UserDaoImpl implements UserDao {
 
     private static String SELECT_USER_BY_ID = "select * from sys_user where id = ?";
 
-//    @Autowired(required = true)
+    @Autowired(required = true)
     private JdbcOperations jdbcOperations;
 
     @Inject
@@ -57,7 +53,6 @@ public class UserDaoImpl implements UserDao {
         return new User(rs.getString("username"), rs.getString("password"));
     }
 
-
     private static final class UserMapper implements RowMapper<User>{
         @Override
         public User mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -65,5 +60,18 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public User save(User user) {
+        return null;
+    }
 
+    @Override
+    public long count() {
+        return 0;
+    }
+
+    @Override
+    public List<User> findAll() {
+        return null;
+    }
 }

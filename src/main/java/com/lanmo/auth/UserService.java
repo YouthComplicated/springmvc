@@ -1,7 +1,7 @@
 package com.lanmo.auth;
 
+import com.lanmo.dao.impl.HibernateUserRepository;
 import com.lanmo.dao.UserDao;
-import com.lanmo.dao.impl.UserDaoImpl;
 import com.lanmo.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,6 +23,9 @@ public class UserService  implements UserDetailsService {
     @Autowired
     private UserDao userDao;
 
+//    @Autowired
+    private HibernateUserRepository hibernateUserRepository;
+
     @Override
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
         User user = userDao.findByUserName("aa");
@@ -36,6 +39,14 @@ public class UserService  implements UserDetailsService {
             return new User(user.getUserName(), user.getPassword(),auths);
         }
         return null;
+    }
+
+    public void testHibernate(){
+//        System.out.println(hibernateUserRepository.save(new User("王五", "f32f23f2f2")));
+        System.out.println("User:"+ hibernateUserRepository.findOne1(1));
+        System.out.println("count():"+ hibernateUserRepository.count());
+        System.out.println("findAll():"+hibernateUserRepository.findAll());
+        System.out.println("findByUserName():" + hibernateUserRepository.findUserByUserName("tom"));
     }
 
 

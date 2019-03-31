@@ -9,4 +9,7 @@ public interface UserDao {
     User findByUserName(String userName);
     User findOne1(long id);
     User findOne2(long id);
+    User save(User user);
+    long count();
+    List<User> findAll();
 }

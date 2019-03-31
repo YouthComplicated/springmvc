@@ -19,7 +19,7 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     //获取web容器的配置类(SpringMVC配置文件) 子容器
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{AppConfig.class, SecurityConfig.class};
+        return new Class[]{AppConfig.class,RootConfig.class};
     }
 
     //获取DispatchServlet的映射信息
