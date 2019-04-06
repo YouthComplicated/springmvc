@@ -1,10 +1,15 @@
 package com.lanmo.entity;
 
 
+import org.hibernate.annotations.Proxy;
+import org.springframework.context.annotation.Lazy;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="sys_teacher")
+//@Lazy(false)
+@Proxy(lazy=false)
 public class Teacher {
 
 

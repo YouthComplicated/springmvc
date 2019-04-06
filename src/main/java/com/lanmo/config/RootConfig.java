@@ -1,12 +1,22 @@
 package com.lanmo.config;
 
 import com.mchange.v2.c3p0.ComboPooledDataSource;
+import com.mongodb.ClientSessionOptions;
+import com.mongodb.DB;
+import com.mongodb.client.ClientSession;
+import com.mongodb.client.MongoDatabase;
 import org.apache.commons.dbcp.BasicDataSource;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.dao.support.PersistenceExceptionTranslator;
+import org.springframework.data.mongodb.MongoDbFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -127,7 +137,7 @@ public class RootConfig {
      * 在DAO实现类上加@Respository注解，并且注册一个PersistenceExceptionTranslationPostProcessor实例即可。
      * @return
      */
-    @Bean
+//    @Bean
     public BeanPostProcessor persistenceTranslation(){
         return new PersistenceExceptionTranslationPostProcessor();
     }
@@ -137,9 +147,24 @@ public class RootConfig {
      * @return
      * @throws PropertyVetoException
      */
-    @Bean
+    @Bean(name="transactionManager")
     public PlatformTransactionManager transactionManager() throws PropertyVetoException {
-        return new DataSourceTransactionManager(dataBasicSource());
+
+        /**
+         * spring 的 PlatformTransactionManager
+         */
+//        PlatformTransactionManager  dataSourceTransactionManager = new DataSourceTransactionManager(dataBasicSource());
+//        return dataSourceTransactionManager;
+
+        /**
+         * jpa transactionManager
+         */
+        JpaTransactionManager transactionManager
+                = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(
+                entityManagerFactory(jpaVendorAdapter()).getObject());
+        transactionManager.setDataSource(dataBasicSource());
+        return transactionManager;
     }
 
     /**
@@ -158,6 +183,7 @@ public class RootConfig {
         entityManagerFactoryBean.setJpaVendorAdapter(jpaVendorAdapter);
         entityManagerFactoryBean.setDataSource(dataBasicSource());
         entityManagerFactoryBean.setPackagesToScan("com.lanmo.entity");
+        entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistenceProvider.class);
         return entityManagerFactoryBean;
     }
 
@@ -176,14 +202,21 @@ public class RootConfig {
         return new PersistenceAnnotationBeanPostProcessor();
     }
 
-//    @Bean
-//    public JpaTransactionManager jpaTransactionManager(){
-//        JpaTransactionManager transactionManager
-//                = new JpaTransactionManager();
-//        transactionManager.setEntityManagerFactory(
-//                entityManagerFactory().getObject() );
-//        return transactionManager;
-//    }
+
+    /**
+     * 直接使用该方式返回JpaTransactionManager  not work
+     * @return
+     */
+//    @Bean(name="transactionManager")
+    public JpaTransactionManager jpaTransactionManager() {
+        JpaTransactionManager transactionManager
+                = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(
+                entityManagerFactory(jpaVendorAdapter()).getObject());
+        transactionManager.setDataSource(dataBasicSource());
+        return transactionManager;
+    }
+
 
     /**
      * 应用程序管理类型JPA 不采取这种方式
@@ -196,6 +229,16 @@ public class RootConfig {
         localEntityManagerFactoryBean.setPersistenceUnitName("user");
         return localEntityManagerFactoryBean;
     }
+
+//    @Bean
+    public RedisConnectionFactory redisCF(){
+        //默认的本机和端口
+        JedisConnectionFactory cf = new JedisConnectionFactory();
+        return new JedisConnectionFactory();
+    }
+
+
+
 
 
 }

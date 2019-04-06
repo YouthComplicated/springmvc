@@ -6,6 +6,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.inject.Inject;
@@ -16,8 +17,11 @@ import javax.persistence.PersistenceUnit;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * 使用entityManager 进行操作(jpa)
+ */
 @Repository
-@Transactional
+@Transactional( propagation = Propagation.REQUIRED)
 public class JpaTeacherRepository implements TeacherDao {
 
 //    private SessionFactory sessionFactory;
@@ -59,18 +63,26 @@ public class JpaTeacherRepository implements TeacherDao {
 //        return entityManagerFactory.createEntityManager().find(Teacher.class,id);
         return entityManager.find(Teacher.class,id);
     }
-
     @Override
     public Teacher save(Teacher teacher) {
 //        entityManagerFactory.createEntityManager().merge(teacher);
-        entityManager.merge(teacher);
+        try {
+            entityManager.merge(teacher);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
         return  teacher;
     }
-
     @Override
     public void insert(Teacher teacher) {
 //        entityManagerFactory.createEntityManager().persist(teacher);
-        entityManager.persist(teacher);
+        try {
+            entityManager.persist(teacher);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println(e.toString());
+        }
     }
 
     @Override

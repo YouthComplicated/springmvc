@@ -15,4 +15,9 @@ public class TeacherController {
     public void TestJPA(){
         teacherService.TestJPA();
     }
+
+    @GetMapping("/test/springdata")
+    public void TestSpringData() {
+        teacherService.TestSpringData();
+    }
 }

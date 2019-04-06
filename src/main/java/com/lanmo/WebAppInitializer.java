@@ -1,8 +1,9 @@
 package com.lanmo;
 
 import com.lanmo.config.AppConfig;
+import com.lanmo.config.JpaRepositoryConfig;
+import com.lanmo.config.MongoConfig;
 import com.lanmo.config.RootConfig;
-import com.lanmo.config.SecurityConfig;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.MultipartConfigElement;
@@ -13,13 +14,14 @@ public class WebAppInitializer extends AbstractAnnotationConfigDispatcherServlet
     //获取根容器 (spring配置文件) 父容器
     @Override
     protected Class<?>[] getRootConfigClasses() {
-        return new Class[]{RootConfig.class};
+//        return new Class[]{RootConfig.class, MongoConfig.class};
+        return new Class[]{RootConfig.class,JpaRepositoryConfig.class,MongoConfig.class};
     }
 
     //获取web容器的配置类(SpringMVC配置文件) 子容器
     @Override
     protected Class<?>[] getServletConfigClasses() {
-        return new Class[]{AppConfig.class,RootConfig.class};
+        return new Class[]{AppConfig.class};
     }
 
     //获取DispatchServlet的映射信息

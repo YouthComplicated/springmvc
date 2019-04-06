@@ -19,6 +19,7 @@ import org.springframework.jndi.JndiObjectFactoryBean;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.validation.MessageCodesResolver;
 import org.springframework.validation.Validator;
 import org.springframework.web.bind.annotation.RestController;
@@ -46,10 +47,14 @@ import java.util.List;
  * SpringMvc只扫描Controller,子容器，禁用默认的过滤规则
  * 该类继承WebMvcConfigurerAdapter指示重写spring mvc 相关功能函数
  */
+//@ComponentScan(value = "com.lanmo", includeFilters = {
+//        @ComponentScan.Filter(type= FilterType.ANNOTATION, classes={Controller.class})
+//},useDefaultFilters = false)
 @ComponentScan(value = "com.lanmo", includeFilters = {
         @ComponentScan.Filter(type= FilterType.ANNOTATION, classes={Controller.class})
 },useDefaultFilters = false)
 @EnableWebMvc //开启spring高级功能 自定义
+@EnableTransactionManagement
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     /**
