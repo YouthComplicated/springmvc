@@ -133,7 +133,6 @@ public class RootConfig {
     /**
      * 当使用Hibernate上下文的Session时，抛出的就不是Spring的异常，
      * 而是HibernateException，如果我们还想看到Spring的异常体系
-     *
      * 在DAO实现类上加@Respository注解，并且注册一个PersistenceExceptionTranslationPostProcessor实例即可。
      * @return
      */

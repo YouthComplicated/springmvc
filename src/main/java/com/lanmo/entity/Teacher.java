@@ -5,12 +5,13 @@ import org.hibernate.annotations.Proxy;
 import org.springframework.context.annotation.Lazy;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="sys_teacher")
 //@Lazy(false)
 @Proxy(lazy=false)
-public class Teacher {
+public class Teacher implements Serializable {
 
 
     /**

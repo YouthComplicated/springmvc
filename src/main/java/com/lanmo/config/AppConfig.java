@@ -2,46 +2,25 @@ package com.lanmo.config;
 
 
 import com.lanmo.config.Interceptor.MyInterceptor;
-import com.mchange.v2.c3p0.ComboPooledDataSource;
-import org.apache.commons.dbcp.BasicDataSource;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.Profile;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.format.FormatterRegistry;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jndi.JndiObjectFactoryBean;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.validation.MessageCodesResolver;
-import org.springframework.validation.Validator;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
+import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
-import org.springframework.web.servlet.DispatcherServlet;
-import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.View;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.view.BeanNameViewResolver;
+import org.springframework.web.servlet.view.ContentNegotiatingViewResolver;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 
-import javax.inject.Inject;
-import javax.sql.DataSource;
-import java.beans.PropertyVetoException;
 import java.io.IOException;
-import java.util.List;
-
-
 
 /**
  * SpringMvc只扫描Controller,子容器，禁用默认的过滤规则
@@ -58,7 +37,7 @@ import java.util.List;
 public class AppConfig extends WebMvcConfigurerAdapter {
 
     /**
-     * 配置jsp视图解析器
+     * 配置jsp视图解析器 html
      * @return
      */
     @Bean
@@ -125,4 +104,39 @@ public class AppConfig extends WebMvcConfigurerAdapter {
 //    @Override
 //    public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
 //    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.defaultContentType(MediaType.APPLICATION_JSON);
+    }
+
+    @Bean
+    public ViewResolver cnViewResolver(ContentNegotiationManager cnm){
+        ContentNegotiatingViewResolver cnvr = new ContentNegotiatingViewResolver();
+        cnvr.setContentNegotiationManager(cnm);
+        return cnvr;
+    }
+
+    /**
+     * 以bean的方式查找视图
+     * @return
+     */
+    @Bean
+    public ViewResolver beanNameViewResolver(){
+        return new BeanNameViewResolver();
+    }
+
+    /**
+     * 将teachers 定义为JSON视图
+     * @return
+     */
+    @Bean
+    public View teachers(){
+        return new MappingJackson2JsonView();
+    }
+
+
+
+
+
 }

@@ -1,4 +1,4 @@
-package com.lanmo.service;
+package com.lanmo.service.impl;
 
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.lanmo.service;
+package com.lanmo.service.impl;
 
 import com.lanmo.dao.TeacherDao;
 import com.lanmo.dao.JpaRepository.TeacherSpringDataDao;
